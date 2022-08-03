@@ -191,24 +191,28 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - destroy-environment
 
-  # configure-infrastructure:
-  #   docker:
-  #     # Docker image here that supports Ansible
-  #   steps:
-  #     # Checkout code from git
-  #     # Add ssh keys with fingerprint
-  #     # attach workspace
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     # Here's where you will add some code to rollback on failure      
+  configure-infrastructure:
+    docker:
+      - image: ansible/ansible
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["d7:16:77:25:3e:fc:b5:a2:3e:84:c3:15:2e:07:71:ac"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      # - run:
+      #     name: Configure server
+      #     command: |
+      #       # Your code here
+      #       exit 1
+      - destroy-environment
 
   # run-migrations:
   #   docker:
@@ -326,25 +330,25 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          context: Slack
-      - build-backend:
-          context: Slack
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      # - build-frontend:
+      #     context: Slack
+      # - build-backend:
+      #     context: Slack
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     filters:
+      #       branches:
+      #         only: [main]
+      - configure-infrastructure
+          # requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
