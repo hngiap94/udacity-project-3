@@ -204,8 +204,10 @@ jobs:
             # yum install -y tar gzip
             # python3 -m pip -V > python.txt
             # cat python.txt
-            uname -a > sysinfo.txt
-            cat sysinfo.txt
+            apt-get update
+            apt-get install python3
+            python3 --version > python.txt
+            cat python.txt
       # - attach_workspace:
       #     at: ~/
             
