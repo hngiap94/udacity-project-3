@@ -202,8 +202,10 @@ jobs:
           name: Install dependencies
           command: |
             # yum install -y tar gzip
-            python3 -m pip -V > python.txt
-            cat python.txt
+            # python3 -m pip -V > python.txt
+            # cat python.txt
+            uname -a > sysinfo.txt
+            cat sysinfo.txt
       # - attach_workspace:
       #     at: ~/
             
