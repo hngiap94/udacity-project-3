@@ -198,14 +198,14 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["d7:16:77:25:3e:fc:b5:a2:3e:84:c3:15:2e:07:71:ac"]
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
             # yum install -y tar gzip
             python3 -m pip -V > python.txt
             cat python.txt
+      # - attach_workspace:
+      #     at: ~/
             
       # - run:
       #     name: Configure server
