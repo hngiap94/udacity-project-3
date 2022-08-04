@@ -205,7 +205,7 @@ jobs:
             # python3 -m pip -V > python.txt
             # cat python.txt
             yum update
-            dnf install python3
+            yum install -y python3
             python3 --version > python.txt
             cat python.txt
       # - attach_workspace:
