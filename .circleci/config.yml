@@ -201,13 +201,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # yum install -y tar gzip
-            # python3 -m pip -V > python.txt
-            # cat python.txt
             yum update
+            yum install -y tar gzip
             yum install -y python3
-            python3 --version > python.txt
-            cat python.txt
+            python3 -m pip install --user ansible
+            
       # - attach_workspace:
       #     at: ~/
             
