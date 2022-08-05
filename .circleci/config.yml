@@ -210,15 +210,19 @@ jobs:
             ./aws/install
             aws --version
             python3 -m pip install --user ansible
-            echo $(ls -a ~/)
+            export PATH="~/.local/bin:$PATH"
+            source ~/.bashrc
+            ansible --version
       # - attach_workspace:
       #     at: ~/
-      # - run:
-      #     name: Configure server
-      #     command: |
-      #       cd .circleci/ansible
-      #       cat ~/inventory.txt
-      #       ansible-playbook -i ~/inventory.txt configure-server.yml
+      - run:
+          name: Configure server
+          command: |
+            ansible --version
+            ansible-playbook --help
+            # cd .circleci/ansible
+            # cat ~/inventory.txt
+            # ansible-playbook -i ~/inventory.txt configure-server.yml
       # - destroy-environment
 
   # run-migrations:
