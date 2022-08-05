@@ -14,10 +14,10 @@
 
   pre_tasks:
     - name: "wait 600 seconds for target connection to become reachable/usable."
-    - raw: sleep 600
+      raw: sleep 600
 
     - name: "install python for Ansible."
-    - raw: apt -y update && apt install -y python3
+      raw: apt -y update && apt install -y python3
 
   environment:
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
