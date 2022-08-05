@@ -206,9 +206,10 @@ jobs:
             echo $(uname -a)
             apk update
             apk add curl
-            curl --version
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
             apk add --update ansible
-            ansible --version
       # - attach_workspace:
       #     at: ~/
       # - run:
