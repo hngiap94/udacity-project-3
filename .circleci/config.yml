@@ -11,7 +11,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+            # aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
 #   revert-migrations:
@@ -170,17 +170,18 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
               --tags project=udapeople
-      - run:
-          name: Ensure front-end infrastructure exist
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --tags project=udapeople
+      # - run:
+      #     name: Ensure front-end infrastructure exist
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/frontend.yml \
+      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+      #         --tags project=udapeople
       - run:
           name: Add back-end ip to ansible inventory
           command: |
+            echo [web] > inventory.txt
             aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -205,16 +206,14 @@ jobs:
             yum install -y tar gzip
             yum install -y python3
             python3 -m pip install --user ansible
-            
-      # - attach_workspace:
-      #     at: ~/
-            
-      # - run:
-      #     name: Configure server
-      #     command: |
-      #       # Your code here
-      #       exit 1
-      # - destroy-environment
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i ~/inventory.txt configure-server.yml
+      - destroy-environment
 
   # run-migrations:
   #   docker:
@@ -344,13 +343,13 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      # - deploy-infrastructure:
+      - deploy-infrastructure
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
       #         only: [main]
-      - configure-infrastructure
-          # requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
