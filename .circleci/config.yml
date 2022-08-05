@@ -186,17 +186,11 @@ jobs:
               --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text >> ~/inventory.txt
-            echo [web] > inventory.txt
-            aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> inventory.txt
-            cat inventory.txt
+            cat ~/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
             - inventory.txt
-            - project/.circleci/ansible/inventory.txt
       - destroy-environment
 
   configure-infrastructure:
@@ -209,24 +203,24 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk update
+            apt-get update
+            apt-get install -y curl
             # apk add --no-cache aws-cli
-            apk add curl
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            ./aws/install
-            aws --version
-            apk add --update ansible
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Configure server
-          command: |
-            cd .circleci/ansible
-            cat ~/inventory.txt
-            cat inventory.txt
-            ansible-playbook -i inventory.txt configure-server.yml
-      - destroy-environment
+            # apk add curl
+            # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            # unzip awscliv2.zip
+            # ./aws/install
+            # aws --version
+            # apk add --update ansible
+      # - attach_workspace:
+      #     at: ~/
+      # - run:
+      #     name: Configure server
+      #     command: |
+      #       cd .circleci/ansible
+      #       cat ~/inventory.txt
+      #       ansible-playbook -i ~/inventory.txt configure-server.yml
+      # - destroy-environment
 
   # run-migrations:
   #   docker:
@@ -356,13 +350,13 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure
+      # - deploy-infrastructure
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
       #       branches:
       #         only: [main]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
+      - configure-infrastructure
+          # requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
