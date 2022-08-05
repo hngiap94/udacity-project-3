@@ -195,7 +195,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: ubuntu:20.04
     steps:
       - checkout
       - add_ssh_keys:
@@ -203,14 +203,16 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum update
-            yum install -y tar gzip
-            yum install -y python3
-            python3 -m pip install --user ansible
-            export PATH="~/.local/bin:$PATH"
-            ls -a ~/ > ls.txt
-            cat ls.txt
-            # source ~/.zshrc
+            uname -a > test.txt
+            cat test.txt
+            # yum update
+            # yum install -y tar gzip
+            # yum install -y python3
+            # python3 -m pip install --user ansible
+            # export PATH="~/.local/bin:$PATH"
+            # ls -a ~/ > ls.txt
+            # cat ls.txt
+            # # source ~/.zshrc
       # - attach_workspace:
       #     at: ~/
       # - run:
