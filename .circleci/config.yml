@@ -209,9 +209,10 @@ jobs:
             unzip awscliv2.zip
             ./aws/install
             aws --version
-            python3 -m pip install --user ansible
-            export PATH="~/.local/bin:$PATH"
-            source ~/.bashrc
+            apt-get install ansible
+            # python3 -m pip install --user ansible
+            # export PATH="~/.local/bin:$PATH"
+            # source ~/.bashrc
             ansible --version
       # - attach_workspace:
       #     at: ~/
