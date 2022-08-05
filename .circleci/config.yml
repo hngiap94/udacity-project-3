@@ -209,7 +209,8 @@ jobs:
             unzip awscliv2.zip
             ./aws/install
             aws --version
-            # apk add --update ansible
+            python3 -m pip install --user ansible
+            echo $(ls -a ~/)
       # - attach_workspace:
       #     at: ~/
       # - run:
