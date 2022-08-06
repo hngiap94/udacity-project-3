@@ -239,6 +239,8 @@ jobs:
             then
               # using: curl -d 'email=hngiap94@gmail.com' https://kvdb.io => Nm8tb2Ud3uorE5ykQEvwjN
               curl https://kvdb.io/Nm8tb2Ud3uorE5ykQEvwjN/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            else
+              curl https://kvdb.io/Nm8tb2Ud3uorE5ykQEvwjN/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
             fi
       # - destroy-environment
 
