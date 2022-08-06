@@ -1,2 +1,2 @@
 [web]
-3.89.187.249
+ec2-18-234-225-98.compute-1.amazonaws.com
