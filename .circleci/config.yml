@@ -235,6 +235,8 @@ jobs:
       - run:
           name: Send migration results to memstash
           command: |
+            cat ~/project/backend/migrations_dump.txt
+            echo "insecure" >> ~/.curlrc
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               # using: curl -d 'email=hngiap94@gmail.com' https://kvdb.io => Nm8tb2Ud3uorE5ykQEvwjN
