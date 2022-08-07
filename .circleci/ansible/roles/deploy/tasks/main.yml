@@ -14,7 +14,7 @@
   command: "{{ item }}"
   with_items:
     - npm install
-    - pm2 stop --silent default
+    # - pm2 stop --silent default
     - pm2 start npm -- start
   args:
     chdir: /home/ubuntu
