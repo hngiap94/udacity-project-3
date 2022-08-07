@@ -3,3 +3,8 @@
   copy:
     src: ~/project/artifact.tar.gz
     dest: /home/ubuntu/artifact.tar.gz
+    
+- name: "extract the zipped artifact"
+  unarchive:
+    src: /home/ubuntu/artifact.tar.gz
+    dest: /home/ubuntu/
