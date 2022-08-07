@@ -10,9 +10,11 @@
     dest: /home/ubuntu/
     remote_src: true
 
-- name: "extract the zipped artifact"
-  command: chdir=/home/ubuntu/ {{ item }}
+- name: "deploy backend"
+  command: {{ item }}
   with_items:
+   - cd /home/ubuntu
+   - pwd > test.txt
    - npm install
    - pm2 stop default
    - pm2 start npm -- start
