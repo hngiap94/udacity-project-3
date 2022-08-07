@@ -1,5 +1,5 @@
 ---
-# - name: "Copy artifact to backend server"
-#   copy:
-#     src: index.html
-#     dest: /var/www/html/index.html
+- name: "Copy artifact to backend server"
+  copy:
+    src: artifact.tar.gz
+    dest: /home/ubuntu/artifact.tar.gz

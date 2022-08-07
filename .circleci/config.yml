@@ -334,11 +334,12 @@ jobs:
             cd ..
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-            echo $(pwd)
-            # cd .circleci/ansible
-            # echo "Contents  of the inventory.txt file is -------"
-            # cat inventory.txt
-            # ansible-playbook -i inventory.txt deploy-backend.yml
+            echo current directory: $(pwd)
+            echo list current directory for artifact: $(ls | grep artifact)
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # TODO: uncomment this line
       # - destroy-environment
 
