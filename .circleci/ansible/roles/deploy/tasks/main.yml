@@ -11,7 +11,7 @@
     remote_src: true
 
 - name: "deploy backend"
-  command: {{ item }}
+  command: "{{ item }}"
   with_items:
    - cd /home/ubuntu
    - pwd > test.txt
