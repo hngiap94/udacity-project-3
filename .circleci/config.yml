@@ -258,6 +258,7 @@ jobs:
             else
               curl https://kvdb.io/Nm8tb2Ud3uorE5ykQEvwjN/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
             fi
+      # TODO: uncomment this line
       # - destroy-environment
 
   deploy-frontend:
@@ -301,25 +302,45 @@ jobs:
             # TODO: uncomment this line
             # aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             aws s3 cp dist s3://udapeople-fd9285b --recursive
-            
-      # Here's where you will add some code to rollback on failure   
+      # TODO: uncomment this line
+      # - destroy-environment
                     
-#   deploy-backend:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Deploy backend
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure  
+  deploy-backend:
+    docker:
+      - image: python:3
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["d7:16:77:25:3e:fc:b5:a2:3e:84:c3:15:2e:07:71:ac"]
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update
+            apt-get install -y nodejs
+            apt-get install -y npm
+            apt-get install -y curl
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install
+            apt-get install -y ansible
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            echo $(pwd)
+            # cd .circleci/ansible
+            # echo "Contents  of the inventory.txt file is -------"
+            # cat inventory.txt
+            # ansible-playbook -i inventory.txt deploy-backend.yml
+      # TODO: uncomment this line
+      # - destroy-environment
 
 #   smoke-test:
 #     docker:
@@ -403,9 +424,9 @@ workflows:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
           # requires: [configure-infrastructure]
-      - deploy-frontend
+      # - deploy-frontend:
       #     requires: [run-migrations]
-      # - deploy-backend:
+      - deploy-backend
       #     requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
