@@ -258,8 +258,7 @@ jobs:
             else
               curl https://kvdb.io/Nm8tb2Ud3uorE5ykQEvwjN/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
             fi
-      # TODO: uncomment this line
-      # - destroy-environment
+      - destroy-environment
 
   deploy-frontend:
     docker:
@@ -282,9 +281,8 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            # TODO: open this comment and add to bellow command
-            # --filters 'Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}' \
             export BACKEND_IP=$(aws ec2 describe-instances \
+            --filters 'Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}' \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text)
              echo "${BACKEND_IP}"
@@ -299,11 +297,9 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            # TODO: uncomment this line
-            # aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            aws s3 cp dist s3://udapeople-fd9285b --recursive
-      # TODO: uncomment this line
-      # - destroy-environment
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            # aws s3 cp dist s3://udapeople-fd9285b --recursive
+      - destroy-environment
                     
   deploy-backend:
     docker:
@@ -340,8 +336,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # TODO: uncomment this line
-      # - destroy-environment
+      - destroy-environment
 
 #   smoke-test:
 #     docker:
@@ -404,31 +399,31 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend:
-      #     context: Slack
-      # - build-backend:
-      #     context: Slack
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-          # requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      - deploy-backend
-      #     requires: [run-migrations]
+      - build-frontend:
+          context: Slack
+      - build-backend:
+          context: Slack
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [main]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
